@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Home</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}"/>
+    <script th:src="@{/js/home.js}"></script>
+</head>
+<body>
+<div class="table-container">
+    <h1>회원 목록</h1>
+    <table>
+        <thead>
+        <tr>
+            <th>회원 아이디</th>
+            <th>닉네임</th>
+            <th>이름</th>
+            <th>전화번호</th>
+            <th>이메일 주소</th>
+            <th>회원가입일</th>
+            <th>현시점 가입 시기</th>
+        </tr>
+        </thead>
+        <tbody id="membersList">
+        
+        </tbody>
+    </table>
+</div>
+</body>
+</html>

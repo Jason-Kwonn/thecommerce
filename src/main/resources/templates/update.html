@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>회원 정보 수정</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}"/>
+    <script th:src="@{/js/update.js}" defer></script>
+</head>
+<body>
+<div class="login-container">
+    <form id="updateForm">
+        <label for="memberId">회원 ID:</label>
+        <input type="text" id="memberId" name="memberId" required>
+
+        <label for="password">비밀번호:</label>
+        <input type="password" id="password" name="password" required>
+
+        <label for="nickName">닉네임:</label>
+        <input type="text" id="nickName" name="nickName" required>
+
+        <label for="name">이름:</label>
+        <input type="text" id="name" name="name" required>
+
+        <label for="phoneNumber">전화번호:</label>
+        <input type="text" id="phoneNumber" name="phoneNumber" required>
+
+        <label for="mailAddress">메일 주소:</label>
+        <input type="email" id="mailAddress" name="mailAddress" required>
+
+        <button type="button" onclick="submitUpdateForm()">정보 수정</button>
+    </form>
+</div>
+</body>
+</html>
