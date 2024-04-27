@@ -1,25 +1,24 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Login Page</title>
-    <link th:href="@{/css/style.css}" rel="stylesheet"/>
-    <script th:src="@{/js/login.js}"></script>
+    <link href="/css/style.css" rel="stylesheet"/>
+    <script src="/js/login.js" type="text/javascript"></script>
 </head>
 <body>
 <div class="login-form-container">
     <div class="login-container">
         <h1>로그인</h1>
-        <form action="/login" method="post">
+        <form id="loginForm">
             <label for="memberId">회원 ID:</label>
             <input type="text" id="memberId" name="memberId" required>
             <label for="password">비밀번호:</label>
             <input type="password" id="password" name="password" required>
             <button type="submit">로그인</button>
         </form>
-        <button type="button">회원가입</button>
+        <button type="button" id="signupButton">회원가입</button>
     </div>
-
+    <div id="errorMessage" style="color: red;"></div>
 </div>
 </body>
 </html>

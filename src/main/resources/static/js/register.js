@@ -1,36 +1,8 @@
 document.addEventListener("DOMContentLoaded", function() {
-    const memberIdInput = document.getElementById('memberId');
-    const nickNameInput = document.getElementById('nickName');
+    const registerForm = document.getElementById('registerForm');
     const passwordInput = document.getElementById('password');
     const phoneNumberInput = document.getElementById('phoneNumber');
     const mailAddressInput = document.getElementById('mailAddress');
-    const registerForm = document.getElementById('registerForm');
-
-    memberIdInput.addEventListener('blur', checkMemberIdOrNickname);
-    nickNameInput.addEventListener('blur', checkMemberIdOrNickname);
-    passwordInput.addEventListener('blur', checkPassword);
-    phoneNumberInput.addEventListener('input', formatPhoneNumber);
-    mailAddressInput.addEventListener('input', autoCompleteEmail);
-
-    function checkMemberIdOrNickname(event) {
-        const input = event.target;
-        const value = input.value;
-        const id = input.id;
-        if (value.length > 15) {
-            displayMessage(input, "최대 15자까지 가능합니다.", false);
-        } else {
-            // Simulating an API request for checking duplication
-            fetch(`/api/check/${id}/${value}`) // URL needs to be adjusted according to actual API
-                .then(response => response.json())
-                .then(data => {
-                    if (data.isDuplicate) {
-                        displayMessage(input, "사용 불가", false);
-                    } else {
-                        displayMessage(input, "사용 가능", true);
-                    }
-                });
-        }
-    }
 
     function checkPassword() {
         const regex = /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[!@#$%^&*])([A-Za-z\d!@#$%^&*]{1,20})$/;
@@ -50,51 +22,55 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
     function autoCompleteEmail() {
-        const domain = mailAddressInput.value.split('@')[1];
-        if (domain !== 'gmail.com' && domain !== 'naver.com') {
-            displayMessage(mailAddressInput, "이메일 양식이 올바르지 않습니다.", false);
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // 기본 이메일 형식 검증 정규식
+        const email = mailAddressInput.value;
+        if (!emailRegex.test(email)) {
+            displayMessage(mailAddressInput, "이메일 형식이 올바르지 않습니다.", false);
         } else {
-            displayMessage(mailAddressInput, "", true);
+            displayMessage(mailAddressInput, "", true); // 올바른 형식일 때는 메시지를 비워줍니다.
         }
     }
 
     function displayMessage(input, message, isValid) {
-        const messageElement = input.nextElementSibling || document.createElement('span');
+        const messageElement = input.parentNode.querySelector('.message');
         messageElement.textContent = message;
         messageElement.style.color = isValid ? 'green' : 'red';
-        if (!input.nextElementSibling) {
-            input.parentNode.insertBefore(messageElement, input.nextSibling);
-        }
     }
 
-    registerForm.addEventListener('submit', submitForm);
-});
 
-function submitForm(event) {
-    event.preventDefault();
-    const formData = {
-        memberId: document.getElementById('memberId').value,
-        password: document.getElementById('password').value,
-        nickName: document.getElementById('nickName').value,
-        name: document.getElementById('name').value,
-        phoneNumber: document.getElementById('phoneNumber').value.replace(/\D/g, ''),
-        mailAddress: document.getElementById('mailAddress').value
-    };
+    passwordInput.addEventListener('blur', checkPassword);
+    phoneNumberInput.addEventListener('input', formatPhoneNumber);
+    mailAddressInput.addEventListener('input', autoCompleteEmail);
 
-    fetch('/api/user/join', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(formData)
-    })
-        .then(response => response.json())
-        .then(data => {
-            alert('회원가입 완료!');
-            window.location.href = '/auth/login';
+    registerForm.addEventListener('submit', function(event) {
+        event.preventDefault();
+        const formData = {
+            memberId: document.getElementById('memberId').value,
+            password: document.getElementById('password').value,
+            nickName: document.getElementById('nickName').value,
+            name: document.getElementById('name').value,
+            phoneNumber: phoneNumberInput.value.replace(/\D/g, ''),
+            mailAddress: mailAddressInput.value
+        };
+
+        fetch('/api/user/join', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(formData)
         })
-        .catch(error => {
-            console.error('Error:', error);
-            alert('회원가입 실패!');
-        });
-}
+            .then(response => {
+                if (response.ok) {
+                    alert('회원가입 완료!');
+                    window.location.href = '/auth/login';
+                } else {
+                    throw new Error('회원가입 실패');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('회원가입 실패!');
+            });
+    });
+});

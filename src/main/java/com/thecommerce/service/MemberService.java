@@ -11,8 +11,11 @@ public interface MemberService {
     // 회원가입: C
     public void addMember(MemberDTO memberDTO);
 
+    // 회원정보 조회: R
+    public MemberDTO getMemberById(Long id);
+
     // 회원정보수정: U
-    public void updateMember(MemberDTO memberDTO);
+    public void updateMember(String memberId, MemberDTO memberDTO);
 
     // 나의 회원정보조회: R
     public List<MemberDTO> getMemberList(SearchDTO searchDTO);

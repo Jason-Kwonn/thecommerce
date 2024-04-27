@@ -9,5 +9,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface MemberRepository extends JpaRepository<Member, Long> {
     Page<Member> findAllByNameContaining(String searchKeyword, Pageable pageable);
 
-    MemberDTO findByMemberId(String memberId);
+    Member findByMemberId(String memberId);
 }
