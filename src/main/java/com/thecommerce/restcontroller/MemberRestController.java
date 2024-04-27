@@ -2,7 +2,6 @@ package com.thecommerce.restcontroller;
 
 import com.thecommerce.domain.dto.MemberDTO;
 import com.thecommerce.domain.dto.SearchDTO;
-import com.thecommerce.domain.entity.Member;
 import com.thecommerce.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -21,7 +20,7 @@ import java.util.List;
 public class MemberRestController {
 
     @Value("${pageSize}")
-    private int pageSize;
+    int pageSize;
     private final MemberService memberService;
 
     @Transactional
@@ -36,11 +35,24 @@ public class MemberRestController {
                 .body("회원가입 완료!");
     }
 
+    @GetMapping("/getMember/{id}")
+    public ResponseEntity<?> getMember(@PathVariable Long id) {
+        // 회원 정보를 조회한다.
+        log.info("/api/user/getMember : GET");
+        MemberDTO memberDTO = memberService.getMemberById(id);
+        if (memberDTO != null) {
+            return ResponseEntity.ok(memberDTO);
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Member not found with ID: " + id);
+        }
+    }
+
+    @Transactional
     @PutMapping("/updateMember")
-    public ResponseEntity<?> updateMember(@RequestBody MemberDTO memberDTO) throws Exception{
+    public ResponseEntity<?> updateMember(@RequestParam("memberId") String memberId, @RequestBody MemberDTO memberDTO) throws Exception{
         // 회원정보를 수정한다.
-        log.info("/api/user/updateMember : PUT");
-        memberService.updateMember(memberDTO);
+        log.info("/api/user/updateMember : PUT, memberId: {}", memberId);
+        memberService.updateMember(memberId, memberDTO);
 
         return ResponseEntity
                 .status(200)
@@ -50,7 +62,7 @@ public class MemberRestController {
     @GetMapping("/list")
     public ResponseEntity<List<MemberDTO>> getMemberList(@ModelAttribute SearchDTO searchDTO) throws Exception{
         // 회원정보를 목록 조회한다.
-        log.info("/api/user/getMemberList : GET");
+        log.info("/api/user/getMemberList : GET, searchDTO: {}", searchDTO);
         searchDTO.setPageSize(pageSize);
 
         return ResponseEntity
@@ -60,14 +72,15 @@ public class MemberRestController {
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody MemberDTO memberDTO) {
-        log.info("/api/user/login : POST");
+        log.info("/api/user/login : POST, MemberID: {}", memberDTO.getMemberId());
         MemberDTO returnedMemberDTO = memberService.login(memberDTO);
         if (returnedMemberDTO != null) {
-            return ResponseEntity.ok(returnedMemberDTO.getId());
+            return ResponseEntity.ok(returnedMemberDTO);
         } else {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("로그인 실패: 아이디 또는 비밀번호가 잘못되었습니다.");
         }
     }
+
 
 
 }
