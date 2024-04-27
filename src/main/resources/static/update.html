@@ -1,16 +1,17 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>회원 정보 수정</title>
-    <link rel="stylesheet" th:href="@{/css/style.css}"/>
-    <script th:src="@{/js/update.js}" defer></script>
+    <link rel="stylesheet" href="/css/style.css"/>
+    <script src="/js/update.js" type="text/javascript" defer></script>
 </head>
 <body>
 <div class="login-container">
+    <h1>회원정보 수정</h1>
     <form id="updateForm">
         <label for="memberId">회원 ID:</label>
-        <input type="text" id="memberId" name="memberId" required>
+        <input type="text" id="memberId" name="memberId" readonly required>
 
         <label for="password">비밀번호:</label>
         <input type="password" id="password" name="password" required>
@@ -27,7 +28,7 @@
         <label for="mailAddress">메일 주소:</label>
         <input type="email" id="mailAddress" name="mailAddress" required>
 
-        <button type="button" onclick="submitUpdateForm()">정보 수정</button>
+        <button type="submit">정보 수정</button>
     </form>
 </div>
 </body>
